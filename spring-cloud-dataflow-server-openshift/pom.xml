@@ -21,56 +21,6 @@
 		<module>spring-cloud-dataflow-server-openshift</module>
 	</modules>
 
-	<properties>
-		<spring-cloud-deployer-openshift.version>1.2.0.RELEASE</spring-cloud-deployer-openshift.version>
-		<spring-cloud-dataflow.version>1.2.2.RELEASE</spring-cloud-dataflow.version>
-		<spring-cloud-deployer-spi.version>1.2.1.RELEASE</spring-cloud-deployer-spi.version>
-		<spring-cloud-kubernetes.version>0.1.6</spring-cloud-kubernetes.version>
-
-	</properties>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-deployer-openshift</artifactId>
-				<version>${spring-cloud-deployer-openshift.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-dataflow-server-core</artifactId>
-				<version>${spring-cloud-dataflow.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-deployer-spi</artifactId>
-				<version>${spring-cloud-deployer-spi.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.fabric8</groupId>
-				<artifactId>spring-cloud-starter-kubernetes</artifactId>
-				<version>${spring-cloud-kubernetes.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>io.fabric8</groupId>
-						<artifactId>kubernetes-client</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>io.fabric8</groupId>
-				<artifactId>spring-cloud-kubernetes-archaius</artifactId>
-				<version>${spring-cloud-kubernetes.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>io.fabric8</groupId>
-						<artifactId>kubernetes-client</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -142,46 +92,6 @@
 					</snapshots>
 				</pluginRepository>
 			</pluginRepositories>
-		</profile>
-		<profile>
-			<id>release-sign-artifacts</id>
-			<activation>
-				<property>
-					<name>performRelease</name>
-					<value>true</value>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.6</version>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<configuration>
-							<skip>true</skip>
-						</configuration>
-					</plugin>
-					<plugin>
-						<artifactId>maven-site-plugin</artifactId>
-						<configuration>
-							<skip>true</skip>
-							<skipDeploy>true</skipDeploy>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
 		</profile>
 	</profiles>
 
