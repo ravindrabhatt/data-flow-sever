@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: "spring-cloud-dataflow-server-openshift-ephemeral-kafka"
+  name: "scdf-inmemory-kafka"
   annotations:
     openshift.io/display-name: "Spring Cloud Data Flow Server for OpenShift with ephemeral datasources and Kafka Template"
     description: |-
@@ -46,7 +46,7 @@ objects:
         spec:
           containers:
             - name: "scdf-kafka"
-              image: "donovanmuller/spring-cloud-dataflow-server-openshift:1.1.0.RELEASE"
+              image: "ravindrabhatt/scdf-server:1.1.0"
               env:
                 - name: KUBERNETES_NAMESPACE
                   valueFrom:

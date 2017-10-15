@@ -6,6 +6,7 @@ echo "Installing OpenShift templates into project '${project}'..."
 
 
 oc replace --force=true -f ./deployment-config.yaml
+oc replace --force=true -f ./scdf-sa.yaml
 
 echo "Adding 'edit' role to 'scdf' Service Account..."
 
