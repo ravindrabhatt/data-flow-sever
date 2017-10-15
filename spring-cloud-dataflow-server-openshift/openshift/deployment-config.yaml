@@ -27,34 +27,8 @@ objects:
           cloud:
             deployer:
               openshift:
-                environmentVariables: 'SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS=${KAFKA_SERVICE_HOST}:${KAFKA_SERVICE_PORT},SPRING_CLOUD_STREAM_KAFKA_BINDER_ZK_NODES=${KAFKA_ZK_SERVICE_HOST}:${KAFKA_ZK_SERVICE_PORT},SPRING_REDIS_HOST=${REDIS_SERVICE_HOST},SPRING_REDIS_PORT=${REDIS_SERVICE_PORT}'
-          datasource:
-            url: jdbc:mysql://${MYSQL_SERVICE_HOST}:${MYSQL_SERVICE_PORT}/scdf
-            driverClassName: org.mariadb.jdbc.Driver
-            testOnBorrow: true
-            validationQuery: "SELECT 1"
-          redis:
-            host: ${REDIS_SERVICE_HOST}
-            port: ${REDIS_SERVICE_PORT}
+                environmentVariables: 'SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS=${KAFKA_SERVICE_HOST}:${KAFKA_SERVICE_PORT},SPRING_CLOUD_STREAM_KAFKA_BINDER_ZK_NODES=${KAFKA_ZK_SERVICE_HOST}:${KAFKA_ZK_SERVICE_PORT}'
 
-        # Currently only support for one additional remote Maven repository
-        # If additional repositories or more advanced configurations are required, please make use of the SPRING_APPLICATION_JSON parameter
-        maven:
-          resolvePom: ${REMOTE_MAVEN_REPO_RESOLVE_POM}
-          remote-repositories.${REMOTE_MAVEN_REPO_NAME}:
-            url: ${REMOTE_MAVEN_REPO_URL}
-            auth:
-              username: ${REMOTE_MAVEN_REPO_AUTH_USERNAME}
-              password: ${REMOTE_MAVEN_REPO_AUTH_PASSWORD}
-  - apiVersion: v1
-    kind: Secret
-    metadata:
-      name: scdf-secrets
-    # The below values will be Base64 encoded when created
-    # See: https://docs.openshift.org/latest/dev_guide/secrets.html#overview
-    stringData:
-      spring.datasource.username: ${DEPLOYER_DATASOURCE_USERNAME}
-      spring.datasource.password: ${DEPLOYER_DATASOURCE_PASSWORD}
   - apiVersion: v1
     kind: DeploymentConfig
     metadata:
@@ -137,7 +111,7 @@ objects:
         name: "scdf-kafka"
       name: "scdf-kafka"
       annotations:
-        service.alpha.openshift.io/dependencies: '[{"name": "mysql","kind": "Service"},{"name": "redis","kind": "Service"},{"name": "kafka-zk","kind": "Service"},{"name": "kafka","kind": "Service"}]'
+        service.alpha.openshift.io/dependencies: '[{"name": "kafka-zk","kind": "Service"},{"name": "kafka","kind": "Service"}]'
     spec:
       template:
         metadata:
@@ -164,114 +138,6 @@ objects:
         name: "scdf-kafka"
       port:
         targetPort: http
-  - apiVersion: v1
-    kind: DeploymentConfig
-    metadata:
-      name: mysql
-    spec:
-      triggers:
-        - type: ConfigChange
-      replicas: 1
-      selector:
-        name: mysql
-      template:
-        metadata:
-          labels:
-            name: mysql
-        spec:
-          containers:
-            - name: mysql
-              image: mysql:5.6
-              env:
-                - name: MYSQL_RANDOM_ROOT_PASSWORD
-                  value: "true"
-                - name: MYSQL_USER
-                  value: ${DEPLOYER_DATASOURCE_USERNAME}
-                - name: MYSQL_PASSWORD
-                  value: ${DEPLOYER_DATASOURCE_PASSWORD}
-                - name: MYSQL_DATABASE
-                  value: scdf
-              ports:
-                - name: mysql
-                  containerPort: 3306
-              readinessProbe:
-                tcpSocket:
-                  port: 3306
-                initialDelaySeconds: 5
-                timeoutSeconds: 5
-              livenessProbe:
-                tcpSocket:
-                  port: 3306
-                initialDelaySeconds: 5
-                timeoutSeconds: 5
-          restartPolicy: Always
-          serviceAccount: scdf
-  - apiVersion: v1
-    kind: Service
-    metadata:
-      labels:
-        name: "mysql"
-      name: "mysql"
-    spec:
-      template:
-        metadata:
-          labels:
-            name: "mysql"
-      ports:
-        - name: mysql
-          port: 3306
-          targetPort: mysql
-      selector:
-        name: "mysql"
-  - apiVersion: v1
-    kind: DeploymentConfig
-    metadata:
-      name: redis
-    spec:
-      triggers:
-        - type: ConfigChange
-      replicas: 1
-      selector:
-        name: redis
-      template:
-        metadata:
-          labels:
-            name: redis
-        spec:
-          containers:
-            - name: redis
-              image: redis:3-alpine
-              ports:
-                - name: redis
-                  containerPort: 6379
-              readinessProbe:
-                tcpSocket:
-                  port: 6379
-                initialDelaySeconds: 5
-                timeoutSeconds: 5
-              livenessProbe:
-                tcpSocket:
-                  port: 6379
-                initialDelaySeconds: 5
-                timeoutSeconds: 5
-          restartPolicy: Always
-  - apiVersion: v1
-    kind: Service
-    metadata:
-      labels:
-        name: "redis"
-      name: "redis"
-    spec:
-      template:
-        metadata:
-          labels:
-            name: "redis"
-      ports:
-        - name: redis
-          port: 6379
-          targetPort: redis
-      selector:
-        name: "redis"
   - apiVersion: v1
     kind: DeploymentConfig
     metadata:
@@ -407,7 +273,7 @@ parameters:
   - name: ENABLE_ANALYTICS
     displayName: Enable Spring Cloud Data Flow Analytics
     description: "Flag (true/false) indicating whether to enable the analytics feature. See http://docs.spring.io/spring-cloud-dataflow/docs/1.1.0.RELEASE/reference/html/arch-analytics.html"
-    value: "true"
+    value: "false"
     required: true
   - name: DEPLOYER_REQUESTS_MEMORY
     displayName: Default memory request for a Pod
@@ -467,15 +333,6 @@ parameters:
     description: The Spring Boot server.port value. See http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-change-the-http-port
     value: "9393"
     required: true
-  - name: DEPLOYER_DATASOURCE_USERNAME
-    displayName: Datasource username
-    description: The Spring datasource username
-    value: "scdf"
-  - name: DEPLOYER_DATASOURCE_PASSWORD
-    displayName: Datasource password
-    description: "The Spring datasource password. Note: This password is generated"
-    generate: expression
-    from: "[a-zA-Z0-9]{16}"
   - name: ROUTE_HOST
     displayName: The OpenShift Route host value
     description: A explicit Route host value, otherise the default is used. See https://docs.openshift.org/latest/dev_guide/routes.html
