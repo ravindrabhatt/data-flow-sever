@@ -21,7 +21,7 @@ objects:
       name: scdf-kafka-config
     data:
       application.yaml: |-
-        health.config.enabled: ${ENABLE_CONFIG_SERVER}
+        health.config.enabled: false
 
         spring:
           cloud:
@@ -57,7 +57,7 @@ objects:
                 - name: SPRING_CLOUD_CONFIG_SERVER_BOOTSTRAP
                   value: ${ENABLE_CONFIG_SERVER}
                 - name: SPRING_CLOUD_DATAFLOW_FEATURES_ANALYTICS_ENABLED
-                  value: ${ENABLE_ANALYTICS}
+                  value: "false"
                 - name: SPRING_CLOUD_DEPLOYER_OPENSHIFT_REQUESTS_MEMORY
                   value: ${DEPLOYER_REQUESTS_MEMORY}
                 - name: SPRING_CLOUD_DEPLOYER_OPENSHIFT_LIMITS_MEMORY
