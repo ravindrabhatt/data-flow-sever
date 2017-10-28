@@ -1,4 +1,4 @@
-package org.springframework.cloud.dataflow.server.openshift;
+package org.kun.dataflow.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

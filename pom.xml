@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>spring-cloud-dataflow-server</artifactId>
+    <groupId>org.kun.dataflow.server</groupId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Data flow server parent</name>

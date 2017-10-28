@@ -5,7 +5,7 @@
 
     <parent>
         <artifactId>spring-cloud-dataflow-server</artifactId>
-        <groupId>org.springframework.cloud</groupId>
+        <groupId>org.kun.dataflow.server</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 

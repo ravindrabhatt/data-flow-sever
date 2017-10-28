@@ -4,8 +4,8 @@
 
     <parent>
         <artifactId>spring-cloud-dataflow-server</artifactId>
-        <groupId>org.springframework.cloud</groupId>
-		<version>0.0.1-SNAPSHOT</version>
+        <groupId>org.kun.dataflow.server</groupId>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>spring-cloud-dataflow-server-openshift</artifactId>
