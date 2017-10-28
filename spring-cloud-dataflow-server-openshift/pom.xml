@@ -14,7 +14,7 @@
     <name>Data Flow Server for OpenShift</name>
 
     <properties>
-        <start-class>org.springframework.cloud.dataflow.server.openshift.OpenShiftDataFlowServer</start-class>
+        <start-class>org.kun.dataflow.server.OpenShiftDataFlowServer</start-class>
     </properties>
 
     <dependencies>
