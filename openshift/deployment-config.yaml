@@ -46,7 +46,7 @@ objects:
         spec:
           containers:
             - name: "scdf-kafka"
-              image: "ravindrabhatt/scdf-server:1.2.0"
+              image: "ravindrabhatt/scdf-server:1.4.0"
               env:
                 - name: KUBERNETES_NAMESPACE
                   valueFrom:
